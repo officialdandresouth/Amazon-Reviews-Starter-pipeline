@@ -1,0 +1,77 @@
+
+==================================================
+OVERVIEW
+==================================================
+Total products processed : 90
+Clean products           : 6
+Flagged products         : 84 (93.3%)
+Total reviews extracted  : 670
+Unique brands            : 38
+
+==================================================
+SENTIMENT BREAKDOWN
+==================================================
+positive      460  (68.7%)
+neutral       125  (18.7%)
+negative       84  (12.5%)
+mixed           1  (0.1%)
+
+==================================================
+SENTIMENT BY BRAND (top 10 by review volume)
+==================================================
+AmazonBasics         pos= 33  neu=  4  neg=  2  (total=39)
+Ambrane              pos= 45  neu= 14  neg=  5  (total=64)
+Duracell             pos= 20  neu=  2  neg=  2  (total=24)
+MI                   pos= 16  neu=  7  neg=  1  (total=24)
+OnePlus              pos= 11  neu= 13  neg= 15  (total=40)
+Portronics           pos= 24  neu=  4  neg=  4  (total=32)
+TP-Link              pos= 24  neu=  8  neg=  0  (total=32)
+Wayona               pos= 36  neu=  9  neg=  3  (total=48)
+boAt                 pos= 46  neu=  7  neg= 10  (total=63)
+pTron                pos= 16  neu=  7  neg=  2  (total=25)
+
+==================================================
+PRICING SUMMARY
+==================================================
+Avg discount             : 54.4%
+Highest discount         : 90%
+Lowest discount          : 0%
+Avg actual price (INR)     : 7259
+Avg discounted price (INR) : 4316
+
+==================================================
+TOP RATED BRANDS (min 5 products)
+==================================================
+AmazonBasics         avg rating = 4.33
+OnePlus              avg rating = 4.20
+boAt                 avg rating = 4.20
+Wayona               avg rating = 4.18
+Ambrane              avg rating = 4.03
+
+==================================================
+MOST QA FLAGS BY BRAND
+==================================================
+Ambrane              20 flag(s)
+boAt                 18 flag(s)
+OnePlus              17 flag(s)
+Wayona               14 flag(s)
+pTron                14 flag(s)
+AmazonBasics         11 flag(s)
+Samsung              11 flag(s)
+Lapster              10 flag(s)
+TP-Link              10 flag(s)
+MI                   9 flag(s)
+
+==================================================
+MOST COMMON QA FLAG TYPES (top 10)
+==================================================
+   6x  no_reviews_extracted
+   3x  Reviewer count (8) matches review count (8) - OK
+   2x  Image URL found in review content (reviewer: Khaja moin)
+   2x  Review count mismatch: 8 reviews provided but rating_count is 24,269
+   2x  Image URL found in review content (https://m.media-amazon.com/images/I/71qFFAlV9ZL._SY88.jpg)
+   2x  Placeholder reviewer name indicates potential data quality issue
+   2x  Reviewer count (8) matches review count (8)
+   1x  Review content issue: 'Niam' review mentions 'micro USB connector' but product is Type C cable - likely copy-pasted review or product mismatch
+   1x  Review title mismatch: 'Asp' reviewer has minimal title 'As' and single-word content 'Good, working fine'
+   1x  Distributor quality issue noted: fungus/paste found in connector suggesting storage problems

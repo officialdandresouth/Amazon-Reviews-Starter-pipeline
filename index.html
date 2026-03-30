@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon Electronics Pipeline Report</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #222; margin: 0; padding: 0; }
+    header { background: #1a1a2e; color: white; padding: 2rem 2rem 1.5rem; }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.6rem; }
+    header p { margin: 0; opacity: 0.7; font-size: 0.95rem; }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: white; border-radius: 8px; padding: 1.2rem 1rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center; }
+    .stat-card .value { font-size: 2rem; font-weight: 700; color: #1a1a2e; }
+    .stat-card .label { font-size: 0.8rem; color: #666; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .chart-section { margin-bottom: 2.5rem; }
+    .chart-section h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: #333; }
+    .chart-section img { width: 100%; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); background: white; }
+    .sentiment-pills { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .pill { padding: 0.5rem 1.2rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600; }
+    .pill.pos { background: #d4edda; color: #155724; }
+    .pill.neu { background: #e2e3e5; color: #383d41; }
+    .pill.neg { background: #f8d7da; color: #721c24; }
+    footer { text-align: center; padding: 2rem; color: #999; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Amazon Electronics — Pipeline Report</h1>
+    <p>AI-driven data extraction and quality analysis · Claude API (Haiku) · 90 products</p>
+  </header>
+  <main>
+    <div class="stats">
+      <div class="stat-card"><div class="value">90</div><div class="label">Products</div></div>
+      <div class="stat-card"><div class="value">6</div><div class="label">Clean</div></div>
+      <div class="stat-card"><div class="value">84</div><div class="label">QA Flagged</div></div>
+      <div class="stat-card"><div class="value">670</div><div class="label">Reviews</div></div>
+      <div class="stat-card"><div class="value">38</div><div class="label">Brands</div></div>
+    </div>
+
+    <h2 style="margin-bottom:0.5rem;">Overall Sentiment</h2>
+    <div class="sentiment-pills">
+      <span class="pill pos">Positive 460 (68.7%)</span>
+      <span class="pill neu">Neutral 125 (18.7%)</span>
+      <span class="pill neg">Negative 84 (12.5%)</span>
+    </div>
+
+    <div class="chart-section">
+      <h2>Top Rated Brands</h2>
+      <img src="output/charts/top_rated_brands.png" alt="Top rated brands chart" />
+    </div>
+    <div class="chart-section">
+      <h2>Sentiment Breakdown by Brand</h2>
+      <img src="output/charts/sentiment_by_brand.png" alt="Sentiment by brand chart" />
+    </div>
+    <div class="chart-section">
+      <h2>Most QA-Flagged Brands</h2>
+      <img src="output/charts/qa_flags_by_brand.png" alt="QA flags by brand chart" />
+    </div>
+  </main>
+  <footer>Built with Claude API · Source on GitHub</footer>
+</body>
+</html>
