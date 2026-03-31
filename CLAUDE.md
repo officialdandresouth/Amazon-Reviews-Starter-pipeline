@@ -73,6 +73,15 @@ This project was built as a learning exercise for a data science internship focu
 - Flagged rows are written to a separate file for human review
 - `max_rows` limit lets you spot-check output before running on the full dataset
 
+## What This Project Demonstrates
+
+End-to-end ETL pipeline — raw CSV data in, structured insight out:
+
+- **Real API usage** — Claude Haiku via tool use (not just chat), forcing schema-validated output
+- **Two-layer quality control** — Claude flags issues, then `validate()` adds a programmatic second pass; flagged and clean rows are split into separate files
+- **Full reporting stack** — plain-text report, three matplotlib charts, and a static site all generated from the same JSON output
+- **Public and presentable** — hosted on GitHub Pages, accessible to anyone without setup or API keys
+
 ## Public Site
 
 The pipeline results are published as a static site via GitHub Pages (`index.html` at repo root).
