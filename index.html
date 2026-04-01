@@ -5,60 +5,420 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amazon Electronics Pipeline Report</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #222; margin: 0; padding: 0; }
-    header { background: #1a1a2e; color: white; padding: 2rem 2rem 1.5rem; }
-    header h1 { margin: 0 0 0.25rem; font-size: 1.6rem; }
-    header p { margin: 0; opacity: 0.7; font-size: 0.95rem; }
-    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card { background: white; border-radius: 8px; padding: 1.2rem 1rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center; }
-    .stat-card .value { font-size: 2rem; font-weight: 700; color: #1a1a2e; }
-    .stat-card .label { font-size: 0.8rem; color: #666; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .chart-section { margin-bottom: 2.5rem; }
-    .chart-section h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: #333; }
-    .chart-section img { width: 100%; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); background: white; }
-    .sentiment-pills { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .pill { padding: 0.5rem 1.2rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600; }
-    .pill.pos { background: #d4edda; color: #155724; }
-    .pill.neu { background: #e2e3e5; color: #383d41; }
-    .pill.neg { background: #f8d7da; color: #721c24; }
-    footer { text-align: center; padding: 2rem; color: #999; font-size: 0.8rem; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f0c29;
+      --purple: #302b63;
+      --blue: #24243e;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --text: #e8e8f0;
+      --muted: rgba(255,255,255,0.5);
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--navy), var(--purple), var(--blue));
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(108,99,255,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(108,99,255,0.2);
+      border: 1px solid rgba(108,99,255,0.5);
+      color: #a29bfe;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 30%, #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero-stat { text-align: center; }
+    .hero-stat .val {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #ff6584);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-stat .lbl { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .scroll-hint svg { width: 20px; height: 20px; opacity: 0.6; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── MAIN CONTENT ── */
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+    /* ── SECTION LABELS ── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #a29bfe;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+    }
+
+    /* ── SENTIMENT PILLS ── */
+    .sentiment-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    .pill {
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .pill.pos { background: rgba(72,199,116,0.15); color: #48c774; border-color: rgba(72,199,116,0.3); }
+    .pill.neu { background: rgba(255,255,255,0.08); color: #ccc; border-color: rgba(255,255,255,0.15); }
+    .pill.neg { background: rgba(255,101,101,0.15); color: #ff6565; border-color: rgba(255,101,101,0.3); }
+
+    /* ── CHART CARDS ── */
+    .charts-grid { display: flex; flex-direction: column; gap: 3rem; }
+
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem 2rem 1.5rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+      position: relative;
+
+      /* initial hidden state */
+      opacity: 0;
+      transform: translateY(60px) scale(0.96);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.7s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.3s ease;
+    }
+
+    .chart-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.08), transparent 60%);
+      pointer-events: none;
+    }
+
+    .chart-card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .chart-card:hover {
+      box-shadow: 0 20px 60px rgba(108,99,255,0.25), 0 0 0 1px rgba(108,99,255,0.3);
+      transform: translateY(-4px) scale(1.005);
+    }
+
+    /* override: when card is not yet visible, don't apply hover transform */
+    .chart-card:not(.visible):hover { transform: translateY(60px) scale(0.96); }
+
+    .chart-card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      color: #fff;
+    }
+
+    .chart-card .chart-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .chart-card img {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .chart-card:hover img { transform: scale(1.01); }
+
+    /* stagger delays */
+    .chart-card:nth-child(1) { transition-delay: 0s; }
+    .chart-card:nth-child(2) { transition-delay: 0.12s; }
+    .chart-card:nth-child(3) { transition-delay: 0.24s; }
+
+    /* ── STAT CARDS ── */
+    .stats-section { margin-top: 4rem; margin-bottom: 1rem; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.4rem 1rem;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card.visible { opacity: 1; transform: translateY(0); }
+
+    .stat-card:hover {
+      box-shadow: 0 8px 30px rgba(108,99,255,0.2);
+      border-color: rgba(108,99,255,0.4);
+    }
+
+    .stat-card .value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-card .label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.3rem;
+    }
+
+    /* stagger stat cards */
+    .stat-card:nth-child(1) { transition-delay: 0s; }
+    .stat-card:nth-child(2) { transition-delay: 0.07s; }
+    .stat-card:nth-child(3) { transition-delay: 0.14s; }
+    .stat-card:nth-child(4) { transition-delay: 0.21s; }
+    .stat-card:nth-child(5) { transition-delay: 0.28s; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    footer a { color: #a29bfe; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #6c63ff, #ff6584);
+      border-radius: 999px;
+      margin: 0.75rem 0 1.5rem;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Amazon Electronics — Pipeline Report</h1>
-    <p>AI-driven data extraction and quality analysis · Claude API (Haiku) · 90 products</p>
-  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">AI-Driven Data Pipeline</div>
+    <h1>Amazon Electronics<br>Analysis Report</h1>
+    <p>An end-to-end ETL pipeline powered by Claude API (Haiku) — extracting, validating, and visualizing 90 electronics product listings from raw CSV data.</p>
+
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">90</div><div class="lbl">Products</div></div>
+      <div class="hero-stat"><div class="val">670</div><div class="lbl">Reviews</div></div>
+      <div class="hero-stat"><div class="val">38</div><div class="lbl">Brands</div></div>
+      <div class="hero-stat"><div class="val">68.7%</div><div class="lbl">Positive</div></div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll to explore</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- MAIN -->
   <main>
-    <div class="chart-section">
-      <h2>Top Rated Brands</h2>
-      <img src="output/charts/top_rated_brands.png" alt="Top rated brands chart" />
-    </div>
-    <div class="chart-section">
-      <h2>Sentiment Breakdown by Brand</h2>
-      <img src="output/charts/sentiment_by_brand.png" alt="Sentiment by brand chart" />
-    </div>
-    <div class="chart-section">
-      <h2>Most QA-Flagged Brands</h2>
-      <img src="output/charts/qa_flags_by_brand.png" alt="QA flags by brand chart" />
+
+    <!-- Sentiment -->
+    <div class="section-label">Review Analysis</div>
+    <div class="section-title">Overall Sentiment</div>
+    <div class="divider"></div>
+    <p class="section-desc">Sentiment was classified per review using Claude API tool use, ensuring structured output without regex parsing.</p>
+
+    <div class="sentiment-row">
+      <span class="pill pos">Positive &nbsp;460 &nbsp;(68.7%)</span>
+      <span class="pill neu">Neutral &nbsp;125 &nbsp;(18.7%)</span>
+      <span class="pill neg">Negative &nbsp;84 &nbsp;(12.5%)</span>
     </div>
 
-    <h2 style="margin-bottom:0.5rem;">Overall Sentiment</h2>
-    <div class="sentiment-pills">
-      <span class="pill pos">Positive 460 (68.7%)</span>
-      <span class="pill neu">Neutral 125 (18.7%)</span>
-      <span class="pill neg">Negative 84 (12.5%)</span>
+    <!-- Charts -->
+    <div class="section-label">Visualizations</div>
+    <div class="section-title">Data at a Glance</div>
+    <div class="divider"></div>
+    <p class="section-desc">Generated from structured JSON output — all three charts reflect the same pipeline run.</p>
+
+    <div class="charts-grid">
+
+      <div class="chart-card">
+        <h2>Top Rated Brands</h2>
+        <p class="chart-desc">Average product rating per brand, sorted descending.</p>
+        <img src="output/charts/top_rated_brands.png" alt="Top rated brands chart" loading="lazy" />
+      </div>
+
+      <div class="chart-card">
+        <h2>Sentiment Breakdown by Brand</h2>
+        <p class="chart-desc">Stacked bar showing positive, neutral, and negative review distribution per brand.</p>
+        <img src="output/charts/sentiment_by_brand.png" alt="Sentiment by brand chart" loading="lazy" />
+      </div>
+
+      <div class="chart-card">
+        <h2>Most QA-Flagged Brands</h2>
+        <p class="chart-desc">Brands with the most data quality issues detected by the two-layer validation system.</p>
+        <img src="output/charts/qa_flags_by_brand.png" alt="QA flags by brand chart" loading="lazy" />
+      </div>
+
     </div>
 
-    <div class="stats">
-      <div class="stat-card"><div class="value">90</div><div class="label">Products</div></div>
-      <div class="stat-card"><div class="value">6</div><div class="label">Clean</div></div>
-      <div class="stat-card"><div class="value">84</div><div class="label">QA Flagged</div></div>
-      <div class="stat-card"><div class="value">670</div><div class="label">Reviews</div></div>
-      <div class="stat-card"><div class="value">38</div><div class="label">Brands</div></div>
+    <!-- Stats -->
+    <div class="stats-section">
+      <div class="section-label" style="margin-top:3rem;">Pipeline Output</div>
+      <div class="section-title">Run Summary</div>
+      <div class="divider"></div>
+      <p class="section-desc">84 of 90 products were flagged by QA checks — flagged rows are written to a separate file for human review.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="value">90</div><div class="label">Products</div></div>
+        <div class="stat-card"><div class="value">6</div><div class="label">Clean</div></div>
+        <div class="stat-card"><div class="value">84</div><div class="label">QA Flagged</div></div>
+        <div class="stat-card"><div class="value">670</div><div class="label">Reviews</div></div>
+        <div class="stat-card"><div class="value">38</div><div class="label">Brands</div></div>
+      </div>
     </div>
+
   </main>
-  <footer>Built with Claude API · Source on GitHub</footer>
+
+  <footer>
+    Built with <a href="https://anthropic.com" target="_blank">Claude API</a> ·
+    Python 3.13 · matplotlib · pandas
+  </footer>
+
+  <script>
+    // Intersection Observer — animate elements in as they scroll into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target); // only trigger once
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".chart-card, .stat-card").forEach(el => observer.observe(el));
+  </script>
+
 </body>
 </html>
