@@ -91,10 +91,9 @@ No API key is needed to view the site — it only shows pre-generated output.
 **Site features (as of April 2026):**
 - Dark theme with scroll-triggered chart animations
 - Animated gradient shimmer on the hero title
-- Floating review bubbles in the hero area — oval pills showing top positive review snippets that fade in and out (hidden on mobile)
+- 3 floating oval review bubbles in the hero showing the highest-rated positive reviews (hidden under 1100px)
 - Interactive product browser with live search and brand filter, paginated 12 at a time with "Show More"
 - Click any product tile to open a detail modal showing pricing, key features, and reviews with sentiment indicators
-- "What Buyers Are Saying" reviews section at the bottom — paginated 12 at a time with "Show More"
 - "Research by D'Andre South" credit in the hero
 - Overall sentiment description is user-friendly, not technical
 

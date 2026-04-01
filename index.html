@@ -635,27 +635,35 @@
 
     .review-bubble {
       position: absolute;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(108,99,255,0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 999px;
-      padding: 0.5rem 1.1rem;
-      max-width: 220px;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.55);
+      padding: 0.6rem 1.4rem;
+      max-width: 260px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
       line-height: 1.4;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       opacity: 0;
-      animation: bubbleFade 6s ease-in-out infinite;
+      animation: bubbleIn 1.2s ease forwards;
+      box-shadow: 0 4px 20px rgba(108,99,255,0.15);
     }
 
     .review-bubble .bubble-star {
       color: #ffc700;
-      margin-right: 0.3rem;
-      font-size: 0.65rem;
+      margin-right: 0.35rem;
+      font-size: 0.72rem;
+    }
+
+    .review-bubble .bubble-reviewer {
+      color: #a29bfe;
+      font-weight: 600;
+      margin-right: 0.4rem;
+      font-size: 0.7rem;
     }
 
     .review-bubble .bubble-text {
@@ -663,84 +671,19 @@
       text-overflow: ellipsis;
     }
 
-    @keyframes bubbleFade {
-      0%   { opacity: 0; transform: translateY(6px); }
-      15%  { opacity: 0.8; transform: translateY(0); }
-      85%  { opacity: 0.8; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-6px); }
+    /* 3 fixed positions: left-top, right-middle, left-bottom */
+    .review-bubble:nth-child(1) { top: 18%; left: 4%; animation-delay: 0.3s; }
+    .review-bubble:nth-child(2) { top: 45%; right: 3%; left: auto; animation-delay: 0.7s; }
+    .review-bubble:nth-child(3) { top: 72%; left: 5%; animation-delay: 1.1s; }
+
+    @keyframes bubbleIn {
+      0%   { opacity: 0; transform: translateY(10px) scale(0.95); }
+      60%  { opacity: 1; transform: translateY(-2px) scale(1.02); }
+      100% { opacity: 0.9; transform: translateY(0) scale(1); }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1100px) {
       .hero-bubbles { display: none; }
-    }
-
-    /* ── REVIEWS SECTION ── */
-    .reviews-section { margin-top: 5rem; }
-
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-
-    .review-tile {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.1rem 1.2rem;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: tileIn 0.4s ease forwards;
-    }
-
-    .review-tile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.35rem;
-    }
-
-    .review-tile-reviewer {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #c8c4ff;
-    }
-
-    .review-tile-rating {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #ffc700;
-    }
-
-    .review-tile-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.3rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .review-tile-content {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .review-tile-product {
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.3);
-      margin-top: 0.5rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     /* ── SHOW MORE BUTTON ── */
@@ -891,19 +834,6 @@
       </div>
     </div>
 
-    <!-- Reviews -->
-    <div class="reviews-section">
-      <div class="section-label">Top Reviews</div>
-      <div class="section-title">What Buyers Are Saying</div>
-      <div class="divider"></div>
-      <p class="section-desc">Highest-rated reviews from across all products — scroll through to see what stood out.</p>
-
-      <div class="reviews-grid" id="reviews-grid"></div>
-      <div class="show-more-wrap" id="reviews-show-more-wrap" style="display:none;">
-        <button class="show-more-btn" id="reviews-show-more">Show More</button>
-      </div>
-    </div>
-
   </main>
 
   <footer>
@@ -938,10 +868,8 @@
 
     // ── Data ──
     let allProducts = [];
-    let allReviews = [];
     let filteredProducts = [];
     let productPage = 0;
-    let reviewPage = 0;
     const PAGE_SIZE = 12;
 
     async function loadProducts() {
@@ -949,35 +877,10 @@
         const res = await fetch("output/structured.json");
         allProducts = await res.json();
 
-        // Extract all reviews with product context, prioritize positive + high-rated products
-        allReviews = [];
-        allProducts.forEach(p => {
-          (p.reviews || []).forEach(r => {
-            allReviews.push({
-              reviewer: r.reviewer,
-              title: r.title,
-              content: r.content,
-              sentiment: r.sentiment,
-              productName: p.product_name,
-              brand: p.brand,
-              rating: p.rating
-            });
-          });
-        });
-
-        // Sort: positive first, then by product rating descending
-        allReviews.sort((a, b) => {
-          const order = { positive: 0, neutral: 1, negative: 2 };
-          if (order[a.sentiment] !== order[b.sentiment]) return order[a.sentiment] - order[b.sentiment];
-          return (b.rating || 0) - (a.rating || 0);
-        });
-
         populateBrandFilter();
         filteredProducts = allProducts;
         productPage = 0;
         renderProductPage();
-        reviewPage = 0;
-        renderReviewPage();
         spawnHeroBubbles();
       } catch (e) {
         document.getElementById("product-grid").innerHTML =
@@ -985,54 +888,31 @@
       }
     }
 
-    // ── Floating hero bubbles ──
+    // ── Floating hero bubbles — 3 highest-rated reviews ──
     function spawnHeroBubbles() {
       const container = document.getElementById("hero-bubbles");
-      const topReviews = allReviews.filter(r => r.sentiment === "positive").slice(0, 30);
-      if (!topReviews.length) return;
 
-      // Positions: scattered around the sides of the hero, avoiding center
-      const positions = [
-        { top: '12%', left: '3%' },   { top: '18%', right: '2%' },
-        { top: '35%', left: '2%' },   { top: '42%', right: '4%' },
-        { top: '58%', left: '4%' },   { top: '65%', right: '3%' },
-        { top: '78%', left: '3%' },   { top: '82%', right: '5%' },
-        { top: '25%', left: '6%' },   { top: '50%', right: '6%' },
-      ];
+      // Collect all positive reviews with product rating, pick the 3 highest
+      const candidates = [];
+      allProducts.forEach(p => {
+        (p.reviews || []).forEach(r => {
+          if (r.sentiment === "positive") {
+            candidates.push({ reviewer: r.reviewer, title: r.title, content: r.content, rating: p.rating || 0 });
+          }
+        });
+      });
+      candidates.sort((a, b) => b.rating - a.rating);
+      const top3 = candidates.slice(0, 3);
+      if (!top3.length) return;
 
-      // Create bubble slots
-      const slots = positions.map((pos, i) => {
+      top3.forEach(r => {
         const el = document.createElement('div');
         el.className = 'review-bubble';
-        Object.assign(el.style, pos);
-        container.appendChild(el);
-        return { el, index: i };
-      });
-
-      // Cycle reviews through slots
-      function fillSlot(slot) {
-        const r = topReviews[Math.floor(Math.random() * topReviews.length)];
         const snippet = r.title || r.content;
-        const text = snippet.length > 35 ? snippet.slice(0, 35) + '…' : snippet;
-        slot.el.innerHTML = `<span class="bubble-star">★</span><span class="bubble-text">${text}</span>`;
-        // Stagger animations with random delays
-        const delay = slot.index * 0.8 + Math.random() * 2;
-        slot.el.style.animationDelay = delay + 's';
-        slot.el.style.animationDuration = (5 + Math.random() * 3) + 's';
-      }
-
-      slots.forEach(fillSlot);
-
-      // Re-cycle content periodically
-      setInterval(() => {
-        const slot = slots[Math.floor(Math.random() * slots.length)];
-        fillSlot(slot);
-        slot.el.style.animation = 'none';
-        slot.el.offsetHeight; // trigger reflow
-        const dur = (5 + Math.random() * 3);
-        slot.el.style.animation = `bubbleFade ${dur}s ease-in-out infinite`;
-        slot.el.style.animationDelay = '0s';
-      }, 3000);
+        const text = snippet.length > 38 ? snippet.slice(0, 38) + '…' : snippet;
+        el.innerHTML = `<span class="bubble-star">★ ${r.rating}</span><span class="bubble-reviewer">${r.reviewer}</span><span class="bubble-text">"${text}"</span>`;
+        container.appendChild(el);
+      });
     }
 
     // ── Brand filter ──
@@ -1105,38 +985,6 @@
 
     document.getElementById("search-input").addEventListener("input", filterProducts);
     document.getElementById("brand-filter").addEventListener("change", filterProducts);
-
-    // ── Paginated reviews grid ──
-    function renderReviewPage() {
-      const grid = document.getElementById("reviews-grid");
-      const wrap = document.getElementById("reviews-show-more-wrap");
-      const shown = (reviewPage + 1) * PAGE_SIZE;
-      const visible = allReviews.slice(0, shown);
-
-      grid.innerHTML = visible.map((r, i) => {
-        const sentClass = r.sentiment === "positive" ? "pos" : r.sentiment === "negative" ? "neg" : "neu";
-        const sentColor = r.sentiment === "positive" ? "#48c774" : r.sentiment === "negative" ? "#ff6565" : "#aaa";
-        const delay = (i >= shown - PAGE_SIZE) ? ((i % PAGE_SIZE) * 0.03) : 0;
-        const instant = i < shown - PAGE_SIZE ? 'style="opacity:1;transform:none;animation:none;"' : `style="animation-delay:${delay}s"`;
-        return `
-          <div class="review-tile" ${instant}>
-            <div class="review-tile-header">
-              <span class="review-tile-reviewer">${r.reviewer}</span>
-              <span class="review-tile-rating">★ ${r.rating || '—'}</span>
-            </div>
-            <div class="review-tile-title">"${r.title}"</div>
-            <div class="review-tile-content">${r.content}</div>
-            <div class="review-tile-product">${r.brand || ''} · ${r.productName}</div>
-          </div>`;
-      }).join("");
-
-      wrap.style.display = shown < allReviews.length ? "" : "none";
-    }
-
-    document.getElementById("reviews-show-more").addEventListener("click", () => {
-      reviewPage++;
-      renderReviewPage();
-    });
 
     // ── Modal ──
     function openModal(productId) {
