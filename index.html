@@ -69,10 +69,18 @@
       font-weight: 800;
       line-height: 1.1;
       margin-bottom: 1rem;
-      background: linear-gradient(135deg, #fff 30%, #a29bfe);
+      background: linear-gradient(90deg, #fff, #a29bfe, #ff6584, #6c63ff, #fff);
+      background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: titleShimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes titleShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .hero p {
