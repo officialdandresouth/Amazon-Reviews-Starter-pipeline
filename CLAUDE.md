@@ -81,11 +81,19 @@ End-to-end ETL pipeline — raw CSV data in, structured insight out:
 - **Two-layer quality control** — Claude flags issues, then `validate()` adds a programmatic second pass; flagged and clean rows are split into separate files
 - **Full reporting stack** — plain-text report, three matplotlib charts, and a static site all generated from the same JSON output
 - **Public and presentable** — hosted on GitHub Pages, accessible to anyone without setup or API keys
+- **Interactive site** — product browser lets viewers search, filter by brand, and explore individual product data in a modal
 
 ## Public Site
 
 The pipeline results are published as a static site via GitHub Pages (`index.html` at repo root).
 No API key is needed to view the site — it only shows pre-generated output.
+
+**Site features (as of April 2026):**
+- Dark theme with scroll-triggered chart animations
+- Interactive product browser with live search and brand filter
+- Click any product tile to open a detail modal showing pricing, key features, and reviews with sentiment indicators
+- "Research by D'Andre South" credit in the hero
+- Overall sentiment description is user-friendly, not technical
 
 ## Environment
 
