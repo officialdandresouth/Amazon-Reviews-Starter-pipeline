@@ -183,7 +183,6 @@
       overflow: hidden;
       position: relative;
 
-      /* initial hidden state */
       opacity: 0;
       transform: translateY(60px) scale(0.96);
       transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
@@ -210,7 +209,6 @@
       transform: translateY(-4px) scale(1.005);
     }
 
-    /* override: when card is not yet visible, don't apply hover transform */
     .chart-card:not(.visible):hover { transform: translateY(60px) scale(0.96); }
 
     .chart-card h2 {
@@ -235,7 +233,6 @@
 
     .chart-card:hover img { transform: scale(1.01); }
 
-    /* stagger delays */
     .chart-card:nth-child(1) { transition-delay: 0s; }
     .chart-card:nth-child(2) { transition-delay: 0.12s; }
     .chart-card:nth-child(3) { transition-delay: 0.24s; }
@@ -289,12 +286,336 @@
       margin-top: 0.3rem;
     }
 
-    /* stagger stat cards */
     .stat-card:nth-child(1) { transition-delay: 0s; }
     .stat-card:nth-child(2) { transition-delay: 0.07s; }
     .stat-card:nth-child(3) { transition-delay: 0.14s; }
     .stat-card:nth-child(4) { transition-delay: 0.21s; }
     .stat-card:nth-child(5) { transition-delay: 0.28s; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #6c63ff, #ff6584);
+      border-radius: 999px;
+      margin: 0.75rem 0 1.5rem;
+    }
+
+    /* ── PRODUCT BROWSER ── */
+    .browser-section { margin-top: 5rem; }
+
+    .browser-controls {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    #search-input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.7rem 1rem 0.7rem 2.6rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #search-input::placeholder { color: var(--muted); }
+    #search-input:focus { border-color: rgba(108,99,255,0.6); }
+
+    #brand-filter {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    #brand-filter:focus { border-color: rgba(108,99,255,0.6); }
+    #brand-filter option { background: #1a1740; }
+
+    .result-count {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    /* product grid */
+    #product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+      opacity: 0;
+      transform: translateY(20px);
+      animation: tileIn 0.4s ease forwards;
+    }
+
+    @keyframes tileIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(108,99,255,0.2);
+      border-color: rgba(108,99,255,0.4);
+    }
+
+    .tile-brand {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a29bfe;
+      margin-bottom: 0.3rem;
+    }
+
+    .tile-name {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .tile-meta {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tile-rating {
+      background: rgba(255,199,0,0.15);
+      color: #ffc700;
+      border: 1px solid rgba(255,199,0,0.3);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .tile-price {
+      font-size: 0.75rem;
+      color: #48c774;
+      font-weight: 600;
+    }
+
+    .tile-flag {
+      font-size: 0.68rem;
+      color: #ff6565;
+      border: 1px solid rgba(255,101,101,0.3);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      background: rgba(255,101,101,0.1);
+    }
+
+    /* empty state */
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,30,0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: linear-gradient(145deg, #1a1740, #0f0c29);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+      animation: modalIn 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.94) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.15); }
+    .modal-close svg { width: 16px; height: 16px; }
+
+    .modal-brand {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a29bfe;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 1.25rem;
+      padding-right: 2.5rem;
+    }
+
+    .modal-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-section-heading {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a29bfe;
+      margin-bottom: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .feature-list li {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: "›";
+      position: absolute;
+      left: 0;
+      color: #6c63ff;
+      font-weight: 700;
+    }
+
+    .review-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .review-reviewer { font-size: 0.8rem; font-weight: 600; color: #c8c4ff; }
+    .review-title { font-size: 0.82rem; color: var(--text); font-style: italic; }
+    .review-content { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-top: 0.3rem; }
+
+    .sentiment-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .sentiment-dot.positive { background: #48c774; }
+    .sentiment-dot.neutral  { background: #aaa; }
+    .sentiment-dot.negative { background: #ff6565; }
+
+    .qa-flag {
+      background: rgba(255,101,101,0.1);
+      border: 1px solid rgba(255,101,101,0.25);
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.78rem;
+      color: #ff9999;
+      margin-bottom: 0.4rem;
+    }
+
+    .category-crumb {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .category-crumb span + span::before {
+      content: " › ";
+      color: rgba(255,255,255,0.2);
+    }
 
     /* ── FOOTER ── */
     footer {
@@ -307,14 +628,10 @@
     footer a { color: #a29bfe; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* ── DIVIDER ── */
-    .divider {
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, #6c63ff, #ff6584);
-      border-radius: 999px;
-      margin: 0.75rem 0 1.5rem;
-    }
+    /* scrollbar inside modal */
+    .modal::-webkit-scrollbar { width: 6px; }
+    .modal::-webkit-scrollbar-track { background: transparent; }
+    .modal::-webkit-scrollbar-thumb { background: rgba(108,99,255,0.4); border-radius: 99px; }
   </style>
 </head>
 <body>
@@ -362,25 +679,21 @@
     <p class="section-desc">Generated from structured JSON output — all three charts reflect the same pipeline run.</p>
 
     <div class="charts-grid">
-
       <div class="chart-card">
         <h2>Top Rated Brands</h2>
         <p class="chart-desc">Average product rating per brand, sorted descending.</p>
         <img src="output/charts/top_rated_brands.png" alt="Top rated brands chart" loading="lazy" />
       </div>
-
       <div class="chart-card">
         <h2>Sentiment Breakdown by Brand</h2>
         <p class="chart-desc">Stacked bar showing positive, neutral, and negative review distribution per brand.</p>
         <img src="output/charts/sentiment_by_brand.png" alt="Sentiment by brand chart" loading="lazy" />
       </div>
-
       <div class="chart-card">
         <h2>Most QA-Flagged Brands</h2>
         <p class="chart-desc">Brands with the most data quality issues detected by the two-layer validation system.</p>
         <img src="output/charts/qa_flags_by_brand.png" alt="QA flags by brand chart" loading="lazy" />
       </div>
-
     </div>
 
     <!-- Stats -->
@@ -399,6 +712,31 @@
       </div>
     </div>
 
+    <!-- Product Browser -->
+    <div class="browser-section">
+      <div class="section-label">Explore the Data</div>
+      <div class="section-title">Product Browser</div>
+      <div class="divider"></div>
+      <p class="section-desc">Search by name, filter by brand, and click any product to see its full extracted data.</p>
+
+      <div class="browser-controls">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input id="search-input" type="text" placeholder="Search products…" autocomplete="off" />
+        </div>
+        <select id="brand-filter">
+          <option value="">All brands</option>
+        </select>
+        <span class="result-count" id="result-count"></span>
+      </div>
+
+      <div id="product-grid">
+        <div class="no-results">Loading products…</div>
+      </div>
+    </div>
+
   </main>
 
   <footer>
@@ -406,18 +744,162 @@
     Python 3.13 · matplotlib · pandas
   </footer>
 
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
   <script>
-    // Intersection Observer — animate elements in as they scroll into view
+    // ── Scroll animations ──
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible");
-          observer.unobserve(entry.target); // only trigger once
+          observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.12 });
 
     document.querySelectorAll(".chart-card, .stat-card").forEach(el => observer.observe(el));
+
+    // ── Product browser ──
+    let allProducts = [];
+
+    async function loadProducts() {
+      try {
+        const res = await fetch("output/structured.json");
+        allProducts = await res.json();
+        populateBrandFilter();
+        renderGrid(allProducts);
+      } catch (e) {
+        document.getElementById("product-grid").innerHTML =
+          '<div class="no-results">Could not load product data.</div>';
+      }
+    }
+
+    function populateBrandFilter() {
+      const brands = [...new Set(allProducts.map(p => p.brand).filter(Boolean))].sort();
+      const sel = document.getElementById("brand-filter");
+      brands.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b;
+        opt.textContent = b;
+        sel.appendChild(opt);
+      });
+    }
+
+    function renderGrid(products) {
+      const grid = document.getElementById("product-grid");
+      document.getElementById("result-count").textContent =
+        products.length + " product" + (products.length !== 1 ? "s" : "");
+
+      if (!products.length) {
+        grid.innerHTML = '<div class="no-results">No products match your search.</div>';
+        return;
+      }
+
+      grid.innerHTML = products.map((p, i) => {
+        const flagged = p.qa_flags && p.qa_flags.length > 0;
+        const delay = (i % 20) * 0.03;
+        return `
+          <div class="product-tile" style="animation-delay:${delay}s" data-id="${p.product_id}" tabindex="0" role="button" aria-label="${p.product_name}">
+            <div class="tile-brand">${p.brand || "Unknown"}</div>
+            <div class="tile-name">${p.product_name}</div>
+            <div class="tile-meta">
+              ${p.rating ? `<span class="tile-rating">★ ${p.rating}</span>` : ""}
+              ${p.pricing?.discounted_price_inr ? `<span class="tile-price">₹${p.pricing.discounted_price_inr}</span>` : ""}
+              ${flagged ? `<span class="tile-flag">${p.qa_flags.length} flag${p.qa_flags.length > 1 ? "s" : ""}</span>` : ""}
+            </div>
+          </div>`;
+      }).join("");
+
+      grid.querySelectorAll(".product-tile").forEach(tile => {
+        tile.addEventListener("click", () => openModal(tile.dataset.id));
+        tile.addEventListener("keydown", e => { if (e.key === "Enter") openModal(tile.dataset.id); });
+      });
+    }
+
+    function filterProducts() {
+      const q = document.getElementById("search-input").value.toLowerCase();
+      const brand = document.getElementById("brand-filter").value;
+      const filtered = allProducts.filter(p => {
+        const matchName = !q || p.product_name.toLowerCase().includes(q) || (p.brand || "").toLowerCase().includes(q);
+        const matchBrand = !brand || p.brand === brand;
+        return matchName && matchBrand;
+      });
+      renderGrid(filtered);
+    }
+
+    document.getElementById("search-input").addEventListener("input", filterProducts);
+    document.getElementById("brand-filter").addEventListener("change", filterProducts);
+
+    // ── Modal ──
+    function openModal(productId) {
+      const p = allProducts.find(x => x.product_id === productId);
+      if (!p) return;
+
+      const sentimentColor = s => s === "positive" ? "positive" : s === "negative" ? "negative" : "neutral";
+
+      const catCrumbs = (p.category_hierarchy || [])
+        .map(c => `<span>${c}</span>`).join("");
+
+      const features = (p.key_features || [])
+        .map(f => `<li>${f}</li>`).join("");
+
+      const reviews = (p.reviews || []).map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <span class="review-reviewer">${r.reviewer}</span>
+            <span class="sentiment-dot ${sentimentColor(r.sentiment)}"></span>
+          </div>
+          <div class="review-title">"${r.title}"</div>
+          <div class="review-content">${r.content}</div>
+        </div>`).join("");
+
+      const flags = (p.qa_flags || [])
+        .map(f => `<div class="qa-flag">${f}</div>`).join("");
+
+      document.getElementById("modal-body").innerHTML = `
+        <div class="modal-brand">${p.brand || "Unknown Brand"}</div>
+        <div class="modal-title">${p.product_name}</div>
+        <div class="category-crumb">${catCrumbs}</div>
+        <div class="modal-row">
+          ${p.rating ? `<span class="tile-rating">★ ${p.rating} &nbsp;(${(p.rating_count || 0).toLocaleString()} ratings)</span>` : ""}
+          ${p.pricing?.discounted_price_inr ? `<span class="tile-price">₹${p.pricing.discounted_price_inr}</span>` : ""}
+          ${p.pricing?.actual_price_inr ? `<span style="font-size:0.75rem;color:var(--muted);text-decoration:line-through;">₹${p.pricing.actual_price_inr}</span>` : ""}
+          ${p.pricing?.discount_pct ? `<span class="tile-flag" style="color:#ffc700;border-color:rgba(255,199,0,0.3);background:rgba(255,199,0,0.1);">${p.pricing.discount_pct}% off</span>` : ""}
+        </div>
+
+        ${features ? `<div class="modal-section-heading">Key Features</div><ul class="feature-list">${features}</ul>` : ""}
+
+        ${reviews ? `<div class="modal-section-heading">Reviews (${(p.reviews||[]).length})</div>${reviews}` : ""}
+
+        ${flags ? `<div class="modal-section-heading">QA Flags</div>${flags}` : ""}
+      `;
+
+      document.getElementById("modal-overlay").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("modal-overlay").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    document.getElementById("modal-overlay").addEventListener("click", e => {
+      if (e.target === document.getElementById("modal-overlay")) closeModal();
+    });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+    loadProducts();
   </script>
 
 </body>
